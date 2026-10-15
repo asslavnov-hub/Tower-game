@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Башня — построй как можно выше</title>
+<style>
+:root{--bg:#eef2f7;--panel:#ffffff;--text:#16202e;--mute:#5d6b80;--line:#d3dbe6;--acc:#ff5d3a;--accText:#ffffff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1724;--panel:#182235;--text:#eef2f7;--mute:#97a6bd;--line:#2a3750;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1724;--panel:#182235;--text:#eef2f7;--mute:#97a6bd;--line:#2a3750;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;user-select:none;-webkit-tap-highlight-color:transparent;overflow:hidden}
+header{width:min(100%,420px);display:flex;justify-content:space-between;align-items:baseline;padding:12px 16px 8px}
+h1{margin:0;font-size:22px;letter-spacing:-.01em}
+.best{color:var(--mute);font-size:14px}
+.wrap{position:relative;width:min(100%,420px,calc((100dvh - 96px) * 360 / 560));aspect-ratio:360/560;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:var(--panel);touch-action:manipulation}
+canvas{display:block;width:100%;height:100%}
+.over{position:absolute;inset:0;display:none;place-items:center;background:rgba(10,16,26,.55)}
+.over.show{display:grid}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;width:80%;text-align:center}
+.card .big{font-size:56px;font-weight:800;line-height:1}
+.card p{margin:6px 0 16px;color:var(--mute)}
+.card button{display:block;width:100%;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:12px;padding:12px;font:600 16px inherit;font-family:inherit;cursor:pointer;margin-top:8px}
+.card button.main{background:var(--acc);color:var(--accText);border-color:var(--acc)}
+button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.hint{color:var(--mute);font-size:13px;padding:8px}
+</style>
+</head>
+<body>
+<header><h1>Башня</h1><span class="best">Рекорд: <b id="best">0</b></span></header>
+<div class="wrap" id="wrap">
+  <canvas id="c" aria-label="Игровое поле. Нажми или пробел, чтобы поставить блок"></canvas>
+  <div class="over" id="over">
+    <div class="card">
+      <div class="big" id="fs">0</div>
+      <p id="msg">этажей</p>
+      <button class="main" id="again">Играть снова</button>
+      <button id="share">Поделиться результатом</button>
+    </div>
+  </div>
+</div>
+<div class="hint">Нажми, чтобы остановить блок. Чем точнее, тем шире башня.</div>
+
+<script>
+const W = 360, H = 560, BH = 26, BASE = H - 70;
+const cv = document.getElementById("c"), ctx = cv.getContext("2d");
+const $ = id => document.getElementById(id);
+let scale = 1;
+
+function resize(){
+  const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
+  scale = cv.width / W;
+}
+window.addEventListener("resize", resize); resize();
+
+let best = 0;
+try { best = +localStorage.getItem("tower-best") || 0; } catch(e){}
+$("best").textContent = best;
+
+let stack, cur, falling, cam, score, combo, state, flash, flashT, last = performance.now();
+
+function reset(){
+  stack = [{x:(W-200)/2, w:200, h:200}];
+  score = 0; combo = 0; cam = 0; falling = []; flash = ""; flashT = 0;
+  spawn(200);
+  state = "ready";
+  $("over").classList.remove("show");
+}
+function spawn(w){
+  const dir = score % 2 ? -1 : 1;
+  cur = {w, dir, x: dir === 1 ? 0 : W - w, h: (score * 11 + 200) % 360};
+}
+function speed(){ return 150 + Math.min(score * 7, 280); }
+
+function place(){
+  const top = stack[stack.length - 1];
+  const diff = cur.x - top.x, overlap = cur.w - Math.abs(diff);
+  if (overlap <= 0){
+    falling.push({x:cur.x, w:cur.w, lvl:stack.length, off:0, vy:0, h:cur.h});
+    return end();
+  }
+  let nx, nw = overlap;
+  if (Math.abs(diff) < 5){
+    nx = top.x; nw = cur.w; combo++;
+    flash = combo > 2 ? "Идеально ×" + combo : "Идеально!"; flashT = 0.9;
+    if (combo >= 3 && nw < 220){ nw += 8; nx -= 4; }
+    if (nx < 0) nx = 0; if (nx + nw > W) nx = W - nw;
+  } else {
+    combo = 0;
+    nx = Math.max(cur.x, top.x);
+    const px = diff > 0 ? top.x + top.w : cur.x, pw = Math.abs(diff);
+    falling.push({x:px, w:pw, lvl:stack.length, off:0, vy:0, h:cur.h});
+  }
+  stack.push({x:nx, w:nw, h:cur.h});
+  score++;
+  try { navigator.vibrate && navigator.vibrate(combo ? 20 : 8); } catch(e){}
+  spawn(nw);
+}
+
+function end(){
+  state = "over";
+  if (score > best){ best = score; $("best").textContent = best; try { localStorage.setItem("tower-best", best); } catch(e){} }
+  $("fs").textContent = score;
+  $("msg").textContent = score === best && score > 0 ? "новый рекорд!" : "этажей · рекорд " + best;
+  setTimeout(() => $("over").classList.add("show"), 450);
+}
+
+function tap(){
+  if (state === "ready") state = "play";
+  else if (state === "play") place();
+}
+$("wrap").addEventListener("pointerdown", e => { if (e.target.closest(".over")) return; tap(); });
+window.addEventListener("keydown", e => { if (e.code === "Space"){ e.preventDefault(); if (state === "over") reset(); else tap(); } });
+$("again").onclick = reset;
+$("share").onclick = async () => {
+  const text = "Я построил башню в " + score + " этажей! Сможешь выше?";
+  try {
+    if (navigator.share) await navigator.share({title:"Башня", text, url:location.href});
+    else { await navigator.clipboard.writeText(text + " " + location.href); $("share").textContent = "Скопировано"; }
+  } catch(e){}
+};
+
+function blockY(lvl){ return BASE - (lvl - cam) * BH; }
+function drawBlock(x, y, w, h){
+  ctx.fillStyle = "hsl(" + h + ",68%,56%)"; ctx.fillRect(x, y - BH, w, BH);
+  ctx.fillStyle = "hsla(0,0%,100%,.28)"; ctx.fillRect(x, y - BH, w, 5);
+  ctx.fillStyle = "hsla(0,0%,0%,.14)"; ctx.fillRect(x, y - 4, w, 4);
+}
+
+function frame(now){
+  const dt = Math.min((now - last) / 1000, 0.05); last = now;
+  if (state === "play"){
+    cur.x += cur.dir * speed() * dt;
+    if (cur.x <= 0){ cur.x = 0; cur.dir = 1; }
+    if (cur.x + cur.w >= W){ cur.x = W - cur.w; cur.dir = -1; }
+  }
+  const target = Math.max(0, stack.length - 9);
+  cam += (target - cam) * Math.min(1, dt * 5);
+  falling.forEach(f => { f.vy += 1500 * dt; f.off += f.vy * dt; });
+  falling = falling.filter(f => f.off < H + 100);
+  if (flashT > 0) flashT -= dt;
+
+  ctx.setTransform(scale, 0, 0, scale, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+  stack.forEach((b, i) => { const y = blockY(i + 1); if (y > -BH && y < H + BH) drawBlock(b.x, y, b.w, b.h); });
+  if (state !== "over") drawBlock(cur.x, blockY(stack.length + 1), cur.w, cur.h);
+  falling.forEach(f => drawBlock(f.x, blockY(f.lvl + 1) + f.off, f.w, f.h));
+
+  const cs = getComputedStyle(document.documentElement);
+  ctx.textAlign = "center"; ctx.fillStyle = cs.getPropertyValue("--text").trim();
+  ctx.globalAlpha = .9; ctx.font = "800 64px system-ui,sans-serif"; ctx.fillText(score, W/2, 82);
+  ctx.globalAlpha = 1;
+  if (flashT > 0){ ctx.globalAlpha = Math.min(1, flashT * 2); ctx.fillStyle = cs.getPropertyValue("--acc").trim(); ctx.font = "700 22px system-ui,sans-serif"; ctx.fillText(flash, W/2, 118); ctx.globalAlpha = 1; }
+  if (state === "ready"){ ctx.fillStyle = cs.getPropertyValue("--mute").trim(); ctx.font = "600 18px system-ui,sans-serif"; ctx.fillText("Нажми, чтобы начать", W/2, 170); }
+  requestAnimationFrame(frame);
+}
+reset(); requestAnimationFrame(frame);
+</script>
+</body>
+</html>
