@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Maison Shawarma — шаурма, достойная аплодисментов</title>
+<meta name="description" content="Maison Shawarma: шаурма на вертеле, лаваш на гриле, фирменный соус. Заказ с собой и доставка.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..800&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--wine:#22070d;--wine2:#34101a;--gold:#d8b46a;--gold2:#f1d89a;--ivory:#f6efe4;--mute:#cdbdb0;--line:rgba(216,180,106,.35);--gg:linear-gradient(100deg,#9a7430 0%,#f7de9c 18%,#c8993f 36%,#fff3c9 52%,#b78836 70%,#f4d88f 86%,#a37a31 100%);
+--serif:"Bodoni Moda","Didot","Bodoni MT",Georgia,serif;--sans:"Jost",system-ui,-apple-system,"Segoe UI",sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(120% 80% at 70% 0%,var(--wine2),var(--wine) 60%);background-attachment:fixed;color:var(--ivory);font-family:var(--sans);font-size:18px;line-height:1.65;font-weight:400}
+a{color:inherit}
+.w{max-width:1080px;margin:0 auto;padding:0 24px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--gold2);outline-offset:4px}
+
+header{display:flex;justify-content:space-between;align-items:center;padding:22px 0}
+.logo{font-family:var(--serif);font-size:22px;letter-spacing:.01em;text-decoration:none}
+nav{display:flex;gap:28px;font-family:var(--serif);font-style:italic;font-size:19px}
+nav a{text-decoration:none;color:var(--mute);transition:color .2s}
+nav a:hover{color:var(--gold2)}
+@media (max-width:640px){nav a:not(:last-child){display:none}}
+
+.hero{position:relative;display:grid;gap:24px;align-items:center;padding:36px 0 72px}
+@media (min-width:860px){.hero{grid-template-columns:1.25fr 1fr;min-height:640px}}
+.hero::before{content:"";position:absolute;inset:0 -12px;border:1px solid var(--line);pointer-events:none}
+.hero::after{content:"";position:absolute;inset:8px -4px;border:1px solid rgba(216,180,106,.15);pointer-events:none}
+.copy{padding:28px 24px 0}
+@media (min-width:860px){.copy{padding:0 0 0 40px}}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(44px,8.6vw,100px);line-height:1;letter-spacing:-.025em;margin:0 0 24px}
+.copy p{max-width:36ch;color:var(--mute);margin:0 0 32px}
+.btns{display:flex;flex-wrap:wrap;gap:14px}
+.btn{display:inline-block;padding:15px 30px;text-decoration:none;font-weight:500;letter-spacing:.04em;border:1px solid var(--gold);transition:background .25s,color .25s}
+.btn.f{background:var(--gold);color:var(--wine)}
+.btn.f:hover{background:var(--gold2)}
+.btn.o{color:var(--gold2)}
+.btn.o:hover{background:rgba(216,180,106,.12)}
+
+/* вертел */
+.spit{position:relative;width:min(300px,72vw);height:440px;margin:0 auto}
+.spit::before{content:"";position:absolute;inset:-10% -30%;background:radial-gradient(closest-side,rgba(216,180,106,.28),transparent)}
+.rod{position:absolute;left:50%;top:0;bottom:0;width:7px;transform:translateX(-50%);background:linear-gradient(90deg,#7d6228,var(--gold2),#7d6228);border-radius:4px}
+.cone{position:absolute;left:50%;top:44px;width:250px;height:340px;transform:translateX(-50%);clip-path:polygon(0 0,100% 0,64% 100%,36% 100%);
+background:repeating-linear-gradient(90deg,#5e220f 0 18px,#82341a 18px 36px,#a64d20 36px 54px,#6f2a13 54px 72px);background-size:72px 100%;animation:turn 5s linear infinite}
+.cone::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.65),transparent 32%,transparent 68%,rgba(0,0,0,.65)),repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 2px,transparent 2px 15px)}
+@keyframes turn{to{background-position-x:72px}}
+.plate{position:absolute;left:50%;transform:translateX(-50%);width:270px;height:16px;border-radius:50%;background:linear-gradient(180deg,var(--gold2),#8a6d33)}
+.plate.t{top:36px}.plate.b{top:376px;width:120px}
+
+section{padding:84px 0}
+h2{font-family:var(--serif);font-weight:400;font-size:clamp(32px,5.4vw,56px);line-height:1.05;letter-spacing:-.02em;margin:0 0 14px}
+.lead{color:var(--mute);max-width:46ch;margin:0 0 48px}
+.rules{display:grid;gap:36px}
+@media (min-width:760px){.rules{grid-template-columns:repeat(3,1fr);gap:48px}}
+.rules div{border-top:1px solid var(--line);padding-top:18px}
+.rules h3{font-family:var(--serif);font-style:italic;font-weight:400;font-size:28px;margin:0 0 8px;color:var(--gold2)}
+.rules p{margin:0;color:var(--mute)}
+
+.menu{max-width:700px;margin:0 auto}
+.menu h2{text-align:center}.menu .lead{text-align:center;margin:0 auto 56px}
+.it{display:grid;grid-template-columns:1fr auto;gap:2px 16px;align-items:baseline;margin-bottom:30px}
+.it h3{font-family:var(--serif);font-weight:400;font-size:25px;margin:0;display:flex;align-items:baseline;gap:12px}
+.it h3::after{content:"";flex:1;border-bottom:1px dotted var(--line);transform:translateY(-5px)}
+.it .p{font-family:var(--serif);font-size:25px;color:var(--gold2);grid-row:1;grid-column:2}
+.it p{grid-column:1/-1;margin:0;color:var(--mute);font-size:16px;font-style:italic;font-family:var(--serif)}
+.sub{margin-top:56px;text-align:center;font-family:var(--serif);font-style:italic;font-size:20px;color:var(--gold2)}
+.add{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 36px;margin-top:14px;color:var(--mute);font-size:16px}
+.note{text-align:center;font-size:13px;color:var(--mute);opacity:.7;margin-top:36px}
+
+.quote{padding:96px 0;text-align:center;border-block:1px solid var(--line)}
+.quote p{font-family:var(--serif);font-style:italic;font-size:clamp(28px,5.4vw,58px);line-height:1.15;letter-spacing:-.015em;max-width:18ch;margin:0 auto}
+
+.visit{display:grid;gap:36px}
+@media (min-width:760px){.visit{grid-template-columns:1.1fr 1fr;align-items:end}}
+dl{margin:0}dt{color:var(--mute);font-size:15px}dd{margin:0 0 18px;font-family:var(--serif);font-size:25px}
+dd a{text-decoration:none;border-bottom:1px solid var(--gold)}
+footer{padding:28px 0 56px;color:var(--mute);font-size:14px;border-top:1px solid var(--line)}
+
+/* золотой металл для шрифта */
+h1,h2,.logo,.rules h3,.it .p,.sub,.quote p{
+  color:var(--gold);background:var(--gg);background-size:220% 100%;background-position:0 0;
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 14px rgba(216,180,106,.28))}
+h1{font-weight:700;letter-spacing:-.02em;animation:sheen 3s ease-out 1}
+h2{font-weight:700}
+.logo{font-weight:700;letter-spacing:.02em}
+.rules h3{font-weight:600}
+.it .p{font-weight:700}
+.quote p{font-weight:500}
+.sub{font-weight:600}
+.btn.f{background:linear-gradient(100deg,#b8903f,#f7de9c 50%,#c8993f);color:#22070d;font-weight:600}
+@keyframes sheen{from{background-position:100% 0}to{background-position:0 0}}
+
+@media (prefers-reduced-motion:reduce){.cone{animation:none}h1{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="w">
+  <header>
+    <a class="logo" href="#top">Maison Shawarma</a>
+    <nav><a href="#rules">Философия</a><a href="#menu">Меню</a><a href="#visit">Визит</a></nav>
+  </header>
+
+  <div class="hero" id="top">
+    <div class="copy">
+      <h1>Шаурма, достойная аплодисментов.</h1>
+      <p>Дом, где вертел вращается медленно, лаваш обжаривают на гриле до золотого хруста, а соус готовят по рецепту, который мы не расскажем даже вам.</p>
+      <div class="btns"><a class="btn f" href="tel:+79000000000">Сделать заказ</a><a class="btn o" href="#menu">Открыть меню</a></div>
+    </div>
+    <div class="spit" aria-hidden="true">
+      <div class="rod"></div><div class="cone"></div><div class="plate t"></div><div class="plate b"></div>
+    </div>
+  </div>
+
+  <section id="rules">
+    <h2>Три правила дома</h2>
+    <p class="lead">Мы не изобретали шаурму. Мы просто отказались делать её на скорую руку.</p>
+    <div class="rules">
+      <div><h3>Огонь</h3><p>Мясо томится на вертеле, пока не станет готовым. Не раньше. Время для нас главный ингредиент.</p></div>
+      <div><h3>Лаваш</h3><p>Тонкий, тёплый, обжаренный ровно настолько, чтобы держать форму и не спорить с начинкой.</p></div>
+      <div><h3>Соус</h3><p>Чесночный, острый, фирменный. Состав хранится в сейфе, а ключ у шеф-повара.</p></div>
+    </div>
+  </section>
+</div>
+
+<div class="quote"><div class="w"><p>Мы никуда не торопимся. Вертел тоже.</p></div></div>
+
+<div class="w">
+  <section class="menu" id="menu">
+    <h2>Коллекция сезона</h2>
+    <p class="lead">Пять шаурм. Каждая заслуживает отдельного вечера, но можно и в один.</p>
+
+    <div class="it"><h3>Классическая курица</h3><span class="p">290 ₽</span><p>Нежная курица, свежие овощи, чесночный соус.</p></div>
+    <div class="it"><h3>Говяжья «Гранд»</h3><span class="p">360 ₽</span><p>Сочная говядина, маринованный лук, соус тахини.</p></div>
+    <div class="it"><h3>«Сад»</h3><span class="p">250 ₽</span><p>Овощи гриль, хумус, свежая зелень. Вегетарианская.</p></div>
+    <div class="it"><h3>Сырная с халапеньо</h3><span class="p">330 ₽</span><p>Курица, расплавленная моцарелла, острый перец.</p></div>
+    <div class="it"><h3>«Королевская»</h3><span class="p">450 ₽</span><p>Двойная порция мяса для тех, кто пришёл всерьёз.</p></div>
+
+    <div class="sub">К шаурме</div>
+    <div class="add"><span>Картофель по-деревенски · 140 ₽</span><span>Айран · 90 ₽</span><span>Домашний лимонад · 150 ₽</span></div>
+    <p class="note">Названия и цены даны для примера, замените их на свои.</p>
+  </section>
+
+  <section id="visit">
+    <div class="visit">
+      <div>
+        <h2>Ждём вас</h2>
+        <p class="lead" style="margin-bottom:0">Без бронирования. Очередь — часть церемонии.</p>
+      </div>
+      <dl>
+        <dt>Адрес</dt><dd>ул. Примерная, 1</dd>
+        <dt>Часы работы</dt><dd>Ежедневно, 10:00–23:00</dd>
+        <dt>Заказ и доставка</dt><dd><a href="tel:+79000000000">+7 900 000-00-00</a></dd>
+      </dl>
+    </div>
+  </section>
+
+  <footer>© Maison Shawarma. Заказы с собой и доставка.</footer>
+</div>
+</body>
+</html>

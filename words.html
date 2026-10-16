@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Слово дня</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--bg:var(--tg-theme-bg-color,#ffffff);--text:var(--tg-theme-text-color,#17202b);--mute:var(--tg-theme-hint-color,#6b7787);--panel:var(--tg-theme-secondary-bg-color,#eef1f5);--btn:var(--tg-theme-button-color,#2f80ed);--btnT:var(--tg-theme-button-text-color,#fff);
+--ok:#3fa66b;--mid:#e0a800;--no:#7d8794;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent;user-select:none;overflow:hidden}
+body{display:flex;flex-direction:column;align-items:center}
+header{width:min(100%,440px);display:flex;justify-content:space-between;align-items:center;padding:10px 14px}
+h1{margin:0;font-size:22px;letter-spacing:-.01em}
+.tools{display:flex;gap:8px}
+.tools button{border:0;background:var(--panel);color:var(--text);border-radius:10px;padding:8px 12px;font:600 14px inherit;font-family:inherit;cursor:pointer}
+.tools button:focus-visible,.k:focus-visible{outline:3px solid var(--btn);outline-offset:2px}
+#grid{display:grid;grid-template-rows:repeat(6,1fr);gap:6px;width:min(100%,300px);padding:4px 0;margin:6px 0 10px}
+.row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.t{aspect-ratio:1;display:grid;place-items:center;border:2px solid var(--panel);border-radius:8px;font-size:28px;font-weight:800;text-transform:uppercase;background:var(--bg)}
+.t.f{border-color:var(--mute);animation:pop .1s}
+.t.ok,.t.mid,.t.no{color:#fff;border-color:transparent}
+.t.ok{background:var(--ok)}.t.mid{background:var(--mid)}.t.no{background:var(--no)}
+@keyframes pop{50%{transform:scale(1.08)}}
+.row.bad{animation:sh .3s}
+@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+#kb{width:min(100%,440px);padding:0 4px;display:grid;gap:6px;margin-top:auto;margin-bottom:10px}
+.kr{display:flex;justify-content:center;gap:4px}
+.k{flex:1;max-width:38px;height:50px;border:0;border-radius:8px;background:var(--panel);color:var(--text);font:700 16px inherit;font-family:inherit;text-transform:uppercase;cursor:pointer;padding:0}
+.k.w{max-width:56px;font-size:14px}
+.k.ok{background:var(--ok);color:#fff}.k.mid{background:var(--mid);color:#fff}.k.no{background:var(--no);color:#fff}
+.end{display:none;gap:8px;width:min(100%,300px);margin-bottom:8px}
+.end.show{display:grid}
+.end button{border:0;border-radius:12px;padding:12px;font:700 15px inherit;font-family:inherit;background:var(--btn);color:var(--btnT);cursor:pointer}
+.end button.s{background:var(--panel);color:var(--text)}
+#toast{position:fixed;top:calc(64px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%;text-align:center;z-index:5}
+#toast.show{opacity:1}
+@media (prefers-reduced-motion:reduce){.t.f,.row.bad{animation:none}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Слово дня</h1>
+  <div class="tools"><button id="hint">Подсказка</button></div>
+</header>
+<div id="grid" aria-label="Игровое поле"></div>
+<div class="end" id="end">
+  <button id="share">Поделиться результатом</button>
+  <button class="s" id="more">Сыграть ещё слово</button>
+</div>
+<div id="kb"></div>
+<div id="toast" role="status"></div>
+
+<script>
+/* ===== Настройки (заполни после запуска бота) ===== */
+const CONFIG = {
+  SHARE_URL: "",       // ссылка на твоего бота или Mini App, например https://t.me/твой_бот/app
+  ADSGRAM_BLOCK_ID: "",// ID рекламного блока Adsgram (необязательно)
+  INVOICE_URL: ""      // ссылка на счёт в Stars: подсказки без рекламы (необязательно)
+};
+
+const WORDS = "арбуз банка белка берег билет блюдо будка буква булка ветка ветер вечер вилка волна ворон время гараж герой глаза город гость грань гроза груша дверь десна дождь доска дочка жизнь забор запах земля зерно игрок книга корка кошка крыша кусок лампа лента лимон линия лодка ложка маска масло метро мечта мираж мишка молот мороз мотор музей мышка народ овощи огонь озеро осень пакет палец парта пенал песня пирог пицца плечо поезд полка порог почта птица пчела радио ручка рыбак салат сапог свеча семья слово спина старт стена страх тайна танец трава труба улица успех фасад фильм фрукт чайка чашка число шарик шахта школа шторм щенок экран ягода".split(" ");
+
+const tg = window.Telegram && Telegram.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+const $ = id => document.getElementById(id);
+const haptic = k => { try { tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred(k); } catch(e){} };
+
+let toastT;
+function toast(m){ const t = $("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2200); }
+
+/* состояние */
+const dayNo = Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 864e5);
+let answer, guesses, cur, over, daily, keyState;
+
+function store(){ if (daily) try { localStorage.setItem("word-day", JSON.stringify({day: dayNo, guesses})); } catch(e){} }
+function start(isDaily){
+  daily = isDaily;
+  answer = isDaily ? WORDS[dayNo % WORDS.length] : WORDS[Math.floor(Math.random() * WORDS.length)];
+  guesses = []; cur = ""; over = false; keyState = {};
+  if (isDaily) {
+    try { const s = JSON.parse(localStorage.getItem("word-day")); if (s && s.day === dayNo) s.guesses.forEach(g => { guesses.push(g); apply(g); }); } catch(e){}
+    if (guesses.length && (guesses[guesses.length-1] === answer || guesses.length >= 6)) over = true;
+  }
+  $("end").classList.toggle("show", over);
+  $("more").hidden = false;
+  draw(); drawKeys();
+}
+
+function check(g){
+  const r = Array(5).fill("no"), left = {};
+  for (let i = 0; i < 5; i++) { if (g[i] === answer[i]) r[i] = "ok"; else left[answer[i]] = (left[answer[i]] || 0) + 1; }
+  for (let i = 0; i < 5; i++) if (r[i] === "no" && left[g[i]] > 0) { r[i] = "mid"; left[g[i]]--; }
+  return r;
+}
+function apply(g){
+  const r = check(g), rank = {no:0, mid:1, ok:2};
+  for (let i = 0; i < 5; i++) { const c = g[i]; if (!keyState[c] || rank[r[i]] > rank[keyState[c]]) keyState[c] = r[i]; }
+}
+
+function draw(){
+  const grid = $("grid"); grid.innerHTML = "";
+  for (let y = 0; y < 6; y++) {
+    const row = document.createElement("div"); row.className = "row"; row.id = "r" + y;
+    const g = guesses[y], res = g ? check(g) : null;
+    for (let x = 0; x < 5; x++) {
+      const t = document.createElement("div"); t.className = "t";
+      if (g) { t.textContent = g[x]; t.classList.add(res[x]); }
+      else if (y === guesses.length && cur[x]) { t.textContent = cur[x]; t.classList.add("f"); }
+      row.appendChild(t);
+    }
+    grid.appendChild(row);
+  }
+}
+function drawKeys(){
+  const kb = $("kb"); kb.innerHTML = "";
+  ["йцукенгшщзх", "фывапролджэ", "ячсмитьбю"].forEach((line, i) => {
+    const r = document.createElement("div"); r.className = "kr";
+    if (i === 2) r.appendChild(key("Ввод", "Enter", true));
+    [...line].forEach(c => r.appendChild(key(c, c)));
+    if (i === 2) r.appendChild(key("⌫", "Backspace", true));
+    kb.appendChild(r);
+  });
+}
+function key(label, val, wide){
+  const b = document.createElement("button");
+  b.className = "k" + (wide ? " w" : "") + (keyState[val] ? " " + keyState[val] : "");
+  b.textContent = label; b.setAttribute("aria-label", val === "Enter" ? "Ввод" : val === "Backspace" ? "Стереть" : label);
+  b.onclick = () => press(val);
+  return b;
+}
+
+function press(k){
+  if (over) return;
+  if (k === "Backspace") cur = cur.slice(0, -1);
+  else if (k === "Enter") {
+    if (cur.length < 5) { const r = $("r" + guesses.length); r.classList.add("bad"); setTimeout(() => r.classList.remove("bad"), 320); toast("Нужно 5 букв"); return; }
+    guesses.push(cur); apply(cur); const g = cur; cur = ""; store();
+    if (g === answer) { over = true; haptic("success"); toast("Верно! Слово: " + answer.toUpperCase()); }
+    else if (guesses.length >= 6) { over = true; haptic("error"); toast("Слово было: " + answer.toUpperCase()); }
+    else haptic("warning");
+    $("end").classList.toggle("show", over);
+  }
+  else if (/^[а-я]$/.test(k) && cur.length < 5) cur += k;
+  draw(); drawKeys();
+}
+document.addEventListener("keydown", e => {
+  if (e.ctrlKey || e.metaKey) return;
+  const k = e.key.toLowerCase();
+  if (k === "enter") press("Enter"); else if (k === "backspace") press("Backspace"); else if (/^[а-я]$/.test(k)) press(k === "ё" ? "е" : k);
+});
+
+/* подсказка за рекламу */
+let adCtl = null;
+if (CONFIG.ADSGRAM_BLOCK_ID) {
+  const s = document.createElement("script"); s.src = "https://sad.adsgram.ai/js/sad.min.js";
+  s.onload = () => { try { adCtl = window.Adsgram.init({blockId: CONFIG.ADSGRAM_BLOCK_ID}); } catch(e){} };
+  document.head.appendChild(s);
+}
+function giveHint(){
+  const known = new Set(); guesses.forEach(g => { for (let i = 0; i < 5; i++) if (g[i] === answer[i]) known.add(i); });
+  for (let i = 0; i < 5; i++) if (!known.has(i)) { toast("Буква " + (i + 1) + ": " + answer[i].toUpperCase()); return; }
+}
+$("hint").onclick = () => {
+  if (over) return;
+  if (CONFIG.INVOICE_URL && tg && tg.openInvoice && localStorage.getItem("word-pro") === "1") return giveHint();
+  if (adCtl) adCtl.show().then(giveHint).catch(() => toast("Реклама недоступна, попробуй позже"));
+  else { giveHint(); }
+};
+
+/* поделиться */
+$("share").onclick = async () => {
+  const win = guesses[guesses.length - 1] === answer;
+  const icons = {ok: "🟩", mid: "🟨", no: "⬛"};
+  const grid = guesses.map(g => check(g).map(c => icons[c]).join("")).join("\n");
+  const text = "Слово дня " + (win ? guesses.length : "X") + "/6\n" + grid + (CONFIG.SHARE_URL ? "\n" + CONFIG.SHARE_URL : "");
+  try {
+    if (tg && CONFIG.SHARE_URL) tg.openTelegramLink("https://t.me/share/url?url=" + encodeURIComponent(CONFIG.SHARE_URL) + "&text=" + encodeURIComponent(text));
+    else if (navigator.share) await navigator.share({text});
+    else { await navigator.clipboard.writeText(text); toast("Результат скопирован"); }
+  } catch(e){}
+};
+$("more").onclick = () => start(false);
+
+start(true);
+</script>
+</body>
+</html>

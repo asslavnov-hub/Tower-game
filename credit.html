@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Кредитный калькулятор: платёж и переплата онлайн</title>
+<meta name="description" content="Рассчитайте ежемесячный платёж, переплату и график платежей по кредиту. Аннуитетные и дифференцированные платежи.">
+<style>
+:root{--bg:#f4f7f6;--card:#ffffff;--text:#14201e;--mute:#5b6b68;--line:#d9e2df;--acc:#0f766e;--accT:#ffffff;--int:#e0872f;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1716;--card:#16221f;--text:#e9f1ef;--mute:#9bb0ab;--line:#27382f;--acc:#2dd4bf;--accT:#06201c;--int:#f0a050;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1716;--card:#16221f;--text:#e9f1ef;--mute:#9bb0ab;--line:#27382f;--acc:#2dd4bf;--accT:#06201c;--int:#f0a050;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+main{max-width:920px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:clamp(26px,5vw,38px);line-height:1.15;margin:8px 0 6px;letter-spacing:-.02em}
+.lead{color:var(--mute);margin:0 0 20px;max-width:60ch}
+.grid{display:grid;gap:16px;grid-template-columns:1fr}
+@media (min-width:760px){.grid{grid-template-columns:1fr 1.05fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+label{display:block;font-weight:600;margin:14px 0 6px}
+label:first-child{margin-top:0}
+.f{display:flex;gap:10px;align-items:center}
+input[type=number]{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);font:600 18px inherit;font-family:inherit}
+input[type=number]:focus-visible,input[type=range]:focus-visible,.seg button:focus-visible,summary:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+input[type=range]{width:100%;accent-color:var(--acc)}
+.u{color:var(--mute);white-space:nowrap}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--text);padding:11px;font:600 15px inherit;font-family:inherit;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--acc);color:var(--accT)}
+.pay{font-size:clamp(34px,8vw,48px);font-weight:800;letter-spacing:-.02em;margin:0;line-height:1.1}
+.sub{color:var(--mute);margin:2px 0 16px}
+.kv{display:grid;grid-template-columns:1fr auto;gap:8px 12px;margin:16px 0 0}
+.kv dt{color:var(--mute)}.kv dd{margin:0;font-weight:700;text-align:right}
+.bar{display:flex;height:16px;border-radius:99px;overflow:hidden;background:var(--line);margin-top:6px}
+.bar i{display:block;height:100%}
+.leg{display:flex;justify-content:space-between;font-size:14px;color:var(--mute);margin-top:6px}
+.leg b{color:var(--text)}
+details{margin-top:16px}
+summary{cursor:pointer;font-weight:700;padding:6px 0}
+.tw{overflow-x:auto;margin-top:8px;max-height:420px;overflow-y:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:460px}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{position:sticky;top:0;background:var(--card)}
+.ad{margin:16px 0 0;min-height:90px;border:1px dashed var(--line);border-radius:12px;display:grid;place-items:center;color:var(--mute);font-size:13px}
+.note{color:var(--mute);font-size:14px;max-width:70ch;margin-top:24px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Кредитный калькулятор</h1>
+  <p class="lead">Узнайте ежемесячный платёж, переплату и график платежей. Расчёт происходит прямо в браузере, данные никуда не отправляются.</p>
+
+  <div class="grid">
+    <section class="card" aria-label="Параметры кредита">
+      <label for="sum">Сумма кредита</label>
+      <div class="f"><input id="sum" type="number" inputmode="numeric" min="10000" step="10000" value="1500000"><span class="u">₽</span></div>
+      <input id="sumR" type="range" min="50000" max="10000000" step="50000" value="1500000" aria-label="Сумма кредита, ползунок">
+
+      <label for="rate">Процентная ставка</label>
+      <div class="f"><input id="rate" type="number" inputmode="decimal" min="0" max="100" step="0.1" value="16.5"><span class="u">% годовых</span></div>
+      <input id="rateR" type="range" min="0" max="40" step="0.1" value="16.5" aria-label="Ставка, ползунок">
+
+      <label for="term">Срок</label>
+      <div class="f"><input id="term" type="number" inputmode="numeric" min="1" max="360" step="1" value="60"><span class="u">месяцев</span></div>
+      <input id="termR" type="range" min="3" max="360" step="1" value="60" aria-label="Срок, ползунок">
+
+      <label>Тип платежей</label>
+      <div class="seg" role="group" aria-label="Тип платежей">
+        <button id="tA" type="button" aria-pressed="true">Аннуитетные</button>
+        <button id="tD" type="button" aria-pressed="false">Дифференцированные</button>
+      </div>
+    </section>
+
+    <section class="card" aria-live="polite">
+      <p class="sub" id="payLabel">Ежемесячный платёж</p>
+      <p class="pay" id="pay">—</p>
+      <p class="sub" id="paySub"></p>
+
+      <div class="bar" aria-hidden="true"><i id="bP" style="background:var(--acc)"></i><i id="bI" style="background:var(--int)"></i></div>
+      <div class="leg"><span>Основной долг <b id="lP"></b></span><span>Проценты <b id="lI"></b></span></div>
+
+      <dl class="kv">
+        <dt>Сумма кредита</dt><dd id="kS"></dd>
+        <dt>Переплата</dt><dd id="kO"></dd>
+        <dt>Всего выплат</dt><dd id="kT"></dd>
+      </dl>
+      <div class="ad" id="ad">Место для рекламного блока</div>
+    </section>
+  </div>
+
+  <details class="card" style="margin-top:16px">
+    <summary>График платежей</summary>
+    <div class="tw"><table>
+      <thead><tr><th>Месяц</th><th>Платёж</th><th>Долг</th><th>Проценты</th><th>Остаток</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table></div>
+  </details>
+
+  <p class="note">Расчёт предварительный и не является офертой. Реальные условия зависят от банка: страховки, комиссии и порядок начисления процентов могут отличаться.</p>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const rub = n => new Intl.NumberFormat("ru-RU", {maximumFractionDigits: 0}).format(Math.round(n)) + " ₽";
+let type = "A";
+
+function pair(num, range){
+  $(num).addEventListener("input", () => { $(range).value = $(num).value; calc(); });
+  $(range).addEventListener("input", () => { $(num).value = $(range).value; calc(); });
+}
+pair("sum", "sumR"); pair("rate", "rateR"); pair("term", "termR");
+function setType(t){
+  type = t;
+  $("tA").setAttribute("aria-pressed", t === "A"); $("tD").setAttribute("aria-pressed", t === "D");
+  calc();
+}
+$("tA").onclick = () => setType("A"); $("tD").onclick = () => setType("D");
+
+function calc(){
+  const P = +$("sum").value, r = +$("rate").value, n = Math.round(+$("term").value);
+  if (!(P > 0) || !(n > 0) || r < 0 || isNaN(r)) { $("pay").textContent = "—"; $("rows").innerHTML = ""; return; }
+  const i = r / 1200;
+  let bal = P, total = 0, rows = [], first = 0, last = 0;
+  const ann = i === 0 ? P / n : P * i / (1 - Math.pow(1 + i, -n));
+  for (let m = 1; m <= n; m++) {
+    const interest = bal * i;
+    const principal = type === "A" ? ann - interest : P / n;
+    const pay = principal + interest;
+    bal = Math.max(0, bal - principal); total += pay;
+    if (m === 1) first = pay; if (m === n) last = pay;
+    rows.push("<tr><td>" + m + "</td><td>" + rub(pay) + "</td><td>" + rub(principal) + "</td><td>" + rub(interest) + "</td><td>" + rub(bal) + "</td></tr>");
+  }
+  const over = total - P;
+  if (type === "A") { $("payLabel").textContent = "Ежемесячный платёж"; $("pay").textContent = rub(ann); $("paySub").textContent = "Одинаковый каждый месяц"; }
+  else { $("payLabel").textContent = "Первый платёж"; $("pay").textContent = rub(first); $("paySub").textContent = "Дальше уменьшается до " + rub(last); }
+  const pp = P / total * 100;
+  $("bP").style.width = pp + "%"; $("bI").style.width = (100 - pp) + "%";
+  $("lP").textContent = Math.round(pp) + "%"; $("lI").textContent = Math.round(100 - pp) + "%";
+  $("kS").textContent = rub(P); $("kO").textContent = rub(over); $("kT").textContent = rub(total);
+  $("rows").innerHTML = rows.join("");
+}
+calc();
+</script>
+</body>
+</html>

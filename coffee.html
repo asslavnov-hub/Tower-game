@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Кофейня</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--bg:#14213d;--card:#1f2e52;--line:#33467a;--text:#f5f1e8;--mute:#9fb0d6;--acc:#fca311;--ok:#5eead4;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent;user-select:none}
+main{max-width:480px;margin:0 auto;padding:16px}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.hello{color:var(--mute);font-size:14px}
+.coins{font-size:44px;font-weight:800;letter-spacing:-.02em;margin:4px 0 0}
+.rate{color:var(--mute);font-size:14px;margin-bottom:8px}
+.boost{display:inline-block;background:var(--acc);color:#14213d;font-weight:700;font-size:13px;border-radius:99px;padding:3px 10px;margin-left:6px}
+.stage{position:relative;display:grid;place-items:center;height:260px}
+#cup{width:210px;height:210px;border-radius:50%;border:0;background:radial-gradient(circle at 35% 30%,#2b3f73,#1a2a50);box-shadow:0 0 0 6px var(--line),0 18px 40px rgba(0,0,0,.4);cursor:pointer;display:grid;place-items:center;transition:transform .08s}
+#cup:active{transform:scale(.94)}
+#cup:focus-visible{outline:3px solid var(--acc);outline-offset:6px}
+#cup svg{width:130px;height:130px}
+.fl{position:absolute;pointer-events:none;font-weight:800;font-size:24px;color:var(--acc);animation:up .8s ease-out forwards}
+@keyframes up{to{transform:translateY(-90px);opacity:0}}
+.promo{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 16px}
+.promo button{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:14px;padding:10px;font:600 13px/1.3 inherit;font-family:inherit;cursor:pointer}
+.promo button b{display:block;color:var(--acc);font-size:15px}
+h2{font-size:16px;margin:0 0 8px}
+.list{display:grid;gap:8px}
+.up{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;color:var(--text);font-family:inherit;text-align:left;cursor:pointer;width:100%}
+.up:disabled{opacity:.45;cursor:default}
+.up .n{font-weight:700}.up .d{color:var(--mute);font-size:13px}
+.up .p{font-weight:800;color:var(--acc);white-space:nowrap}
+.up .l{color:var(--mute);font-size:12px;text-align:right}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ok);color:#0b2b27;font-weight:700;padding:10px 16px;border-radius:12px;opacity:0;transition:.25s;max-width:90%;text-align:center;pointer-events:none}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){.fl{animation:none;opacity:0}#cup{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><span class="hello" id="hello">Твоя кофейня</span></div>
+  <div class="coins"><span id="coins">0</span></div>
+  <div class="rate"><span id="rate"></span><span id="boost" class="boost" hidden></span></div>
+
+  <div class="stage" id="stage">
+    <button id="cup" aria-label="Сварить кофе">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <path d="M30 12c-5 7 5 10 0 18M46 8c-5 8 5 11 0 20M62 12c-5 7 5 10 0 18" fill="none" stroke="#9fb0d6" stroke-width="3" stroke-linecap="round"/>
+        <path d="M18 38h56v22a24 24 0 0 1-24 24h-8a24 24 0 0 1-24-24z" fill="#f5f1e8"/>
+        <path d="M74 44h6a10 10 0 0 1 0 20h-8" fill="none" stroke="#f5f1e8" stroke-width="6" stroke-linecap="round"/>
+        <path d="M18 38h56v8H18z" fill="#fca311"/>
+        <ellipse cx="46" cy="90" rx="30" ry="4" fill="#33467a"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="promo">
+    <button id="adBtn"><b>×2 на 10 минут</b>Посмотреть рекламу</button>
+    <button id="buyBtn"><b>×2 навсегда</b>Купить за Telegram Stars</button>
+  </div>
+
+  <h2>Улучшения</h2>
+  <div class="list" id="list"></div>
+</main>
+<div id="toast" role="status"></div>
+
+<script>
+/* ===== Настройки монетизации (заполни после запуска бота) ===== */
+const CONFIG = {
+  INVOICE_URL: "",   // ссылка на счёт в Stars: бот создаёт её через createInvoiceLink (валюта XTR)
+  ADSGRAM_BLOCK_ID: "" // ID рекламного блока из Adsgram (необязательно)
+};
+
+const tg = window.Telegram && Telegram.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+const user = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
+if (user) document.getElementById("hello").textContent = "Кофейня, " + user.first_name;
+
+const UP = [
+  {id:"tap", name:"Крепкий эспрессо", desc:"+1 за нажатие", base:15,    tap:1},
+  {id:"bar", name:"Бариста",          desc:"+1 в секунду",  base:50,    sec:1},
+  {id:"mac", name:"Кофемашина",       desc:"+6 в секунду",  base:400,   sec:6},
+  {id:"pt2", name:"Вторая точка",     desc:"+30 в секунду", base:3000,  sec:30},
+  {id:"net", name:"Сеть кофеен",      desc:"+160 в секунду",base:20000, sec:160}
+];
+
+function load(){ try { return JSON.parse(localStorage.getItem("coffee-save")); } catch(e){ return null; } }
+function save(){ S.t = Date.now(); try { localStorage.setItem("coffee-save", JSON.stringify(S)); } catch(e){} }
+let S = load() || {coins:0, lv:{}, perm:false, boostUntil:0, t:Date.now()};
+S.lv = S.lv || {};
+
+const fmt = n => n < 1000 ? Math.floor(n).toString() : new Intl.NumberFormat("ru", {notation:"compact", maximumFractionDigits:2}).format(n);
+const lvl = id => S.lv[id] || 0;
+const mult = () => (S.perm ? 2 : 1) * (Date.now() < S.boostUntil ? 2 : 1);
+const perTap = () => (1 + lvl("tap")) * mult();
+const perSec = () => UP.reduce((a,u) => a + (u.sec||0) * lvl(u.id), 0) * mult();
+const cost = u => Math.ceil(u.base * Math.pow(1.15, lvl(u.id)));
+
+const $ = id => document.getElementById(id);
+const toastEl = $("toast"); let toastT;
+function toast(msg){ toastEl.textContent = msg; toastEl.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove("show"), 2600); }
+function haptic(kind){ try { tg && tg.HapticFeedback && tg.HapticFeedback.impactOccurred(kind || "light"); } catch(e){} }
+
+/* офлайн-доход: до 3 часов, 50% скорости */
+(function(){
+  const dt = Math.min((Date.now() - (S.t || Date.now())) / 1000, 10800);
+  const gain = perSec() * dt * 0.5;
+  if (gain >= 1) { S.coins += gain; setTimeout(() => toast("Пока тебя не было: +" + fmt(gain)), 400); }
+})();
+
+/* улучшения */
+const list = $("list");
+UP.forEach(u => {
+  const b = document.createElement("button");
+  b.className = "up"; b.id = "up-" + u.id;
+  b.innerHTML = '<span><span class="n"></span><br><span class="d">' + u.desc + '</span></span><span><span class="p"></span><br><span class="l"></span></span>';
+  b.querySelector(".n").textContent = u.name;
+  b.onclick = () => {
+    const c = cost(u);
+    if (S.coins < c) return;
+    S.coins -= c; S.lv[u.id] = lvl(u.id) + 1;
+    haptic("medium"); render(); save();
+  };
+  list.appendChild(b);
+});
+
+function render(){
+  $("coins").textContent = fmt(S.coins);
+  $("rate").textContent = "+" + fmt(perSec()) + " в секунду · +" + fmt(perTap()) + " за нажатие";
+  const left = S.boostUntil - Date.now();
+  const bo = $("boost");
+  if (left > 0) { bo.hidden = false; bo.textContent = "×2 ещё " + Math.ceil(left/60000) + " мин"; } else bo.hidden = true;
+  $("buyBtn").hidden = S.perm;
+  UP.forEach(u => {
+    const b = $("up-" + u.id), c = cost(u);
+    b.querySelector(".p").textContent = fmt(c);
+    b.querySelector(".l").textContent = "ур. " + lvl(u.id);
+    b.disabled = S.coins < c;
+  });
+}
+
+/* нажатие */
+$("cup").addEventListener("pointerdown", e => {
+  const g = perTap(); S.coins += g; haptic("light");
+  const st = $("stage"), r = st.getBoundingClientRect();
+  const f = document.createElement("span");
+  f.className = "fl"; f.textContent = "+" + fmt(g);
+  f.style.left = (e.clientX - r.left - 12) + "px"; f.style.top = (e.clientY - r.top - 20) + "px";
+  st.appendChild(f); f.addEventListener("animationend", () => f.remove());
+  setTimeout(() => f.remove(), 1000);
+  render();
+});
+
+/* реклама за бонус */
+function giveBoost(){ S.boostUntil = Math.max(Date.now(), S.boostUntil) + 10*60000; save(); render(); toast("Доход ×2 на 10 минут"); }
+let adCtl = null;
+if (CONFIG.ADSGRAM_BLOCK_ID) {
+  const s = document.createElement("script");
+  s.src = "https://sad.adsgram.ai/js/sad.min.js";
+  s.onload = () => { try { adCtl = window.Adsgram.init({blockId: CONFIG.ADSGRAM_BLOCK_ID}); } catch(e){} };
+  document.head.appendChild(s);
+}
+$("adBtn").onclick = () => {
+  if (adCtl) adCtl.show().then(giveBoost).catch(() => toast("Реклама недоступна, попробуй позже"));
+  else { giveBoost(); toast("Тестовый режим: реклама не подключена"); }
+};
+
+/* покупка за Stars */
+$("buyBtn").onclick = () => {
+  if (!CONFIG.INVOICE_URL || !tg || !tg.openInvoice) { toast("Оплата не подключена: укажи INVOICE_URL"); return; }
+  tg.openInvoice(CONFIG.INVOICE_URL, status => {
+    if (status === "paid") { S.perm = true; save(); render(); toast("Спасибо! Доход ×2 навсегда"); }
+  });
+};
+
+/* игровой цикл */
+let last = Date.now();
+setInterval(() => { const n = Date.now(); S.coins += perSec() * (n - last) / 1000; last = n; render(); }, 250);
+setInterval(save, 3000);
+document.addEventListener("visibilitychange", () => { if (document.hidden) save(); });
+render();
+</script>
+</body>
+</html>

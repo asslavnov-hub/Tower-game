@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Студия косметологии «Чистая кожа»</title>
+<meta name="description" content="Косметология: чистки, пилинги, уходовые программы. Бесплатная консультация и подбор процедур.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--rose:#b84a73;--roseD:#9a3a5d;--blush:#f9e9ef;--bg:#fffafb;--ink:#2a2230;--mute:#6c6275;--line:#ecdfe5;--white:#fff;
+--f:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:17px;line-height:1.6}
+a{color:inherit}
+.w{max-width:1040px;margin:0 auto;padding:0 20px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--rose);outline-offset:3px}
+
+header{position:sticky;top:0;z-index:10;background:rgba(255,250,251,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:14px;height:62px}
+.logo{font-weight:800;font-size:19px;text-decoration:none;letter-spacing:-.01em}
+nav{display:none;gap:24px;font-weight:500}
+nav a{text-decoration:none;color:var(--mute)}nav a:hover{color:var(--rose)}
+@media (min-width:760px){nav{display:flex}}
+.btn{display:inline-block;background:var(--rose);color:#fff;font:700 16px var(--f);text-decoration:none;padding:13px 24px;border-radius:999px;border:0;cursor:pointer;transition:background .2s}
+.btn:hover{background:var(--roseD)}
+.btn.o{background:transparent;color:var(--rose);box-shadow:inset 0 0 0 2px var(--rose)}
+.btn.o:hover{background:var(--blush)}
+
+.hero{display:grid;gap:28px;align-items:center;padding:44px 0 56px}
+@media (min-width:820px){.hero{grid-template-columns:1.2fr 1fr;padding:64px 0 72px}}
+h1{font-size:clamp(34px,6.4vw,58px);line-height:1.08;letter-spacing:-.03em;font-weight:800;margin:0 0 16px}
+.hero p{color:var(--mute);max-width:44ch;margin:0 0 26px;font-size:18px}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.art{width:min(340px,80%);margin:0 auto}
+.facts{display:grid;gap:12px;margin:0 0 8px;padding:0;list-style:none}
+@media (min-width:700px){.facts{grid-template-columns:repeat(3,1fr)}}
+.facts li{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:16px 18px;font-weight:600}
+.facts span{display:block;color:var(--mute);font-weight:400;font-size:15px;margin-top:2px}
+
+section{padding:56px 0}
+h2{font-size:clamp(26px,4.4vw,38px);line-height:1.12;letter-spacing:-.02em;font-weight:800;margin:0 0 8px}
+.sub{color:var(--mute);margin:0 0 28px;max-width:56ch}
+.groups{display:grid;gap:16px}
+@media (min-width:820px){.groups{grid-template-columns:repeat(3,1fr)}}
+.g{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:20px}
+.g h3{font-size:19px;margin:0 0 10px;font-weight:800}
+.row{display:grid;grid-template-columns:1fr auto;gap:0 12px;padding:11px 0;border-top:1px solid var(--line)}
+.row b{font-weight:600}.row small{color:var(--mute);grid-column:1}.row em{font-style:normal;font-weight:800;color:var(--rose);grid-row:1/3;grid-column:2;align-self:center;white-space:nowrap}
+.tint{background:var(--blush)}
+.steps{display:grid;gap:14px;padding:0;margin:0;list-style:none;counter-reset:s}
+@media (min-width:820px){.steps{grid-template-columns:repeat(4,1fr)}}
+.steps li{counter-increment:s;background:var(--white);border-radius:18px;padding:20px}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--rose);color:#fff;font-weight:800;margin-bottom:10px}
+.steps b{display:block;margin-bottom:2px}.steps span{color:var(--mute);font-size:16px}
+.about{display:grid;gap:20px;align-items:center}
+@media (min-width:820px){.about{grid-template-columns:260px 1fr;gap:40px}}
+.ph{aspect-ratio:1;border-radius:24px;background:linear-gradient(145deg,#f3cfdc,#e6b5c9);display:grid;place-items:center;color:#fff;font-weight:800;font-size:64px}
+details{border-bottom:1px solid var(--line);padding:14px 0}
+summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::after{content:"+";color:var(--rose);font-size:22px;line-height:1}
+details[open] summary::after{content:"–"}
+details p{margin:8px 0 0;color:var(--mute)}
+.book{display:grid;gap:28px}
+@media (min-width:820px){.book{grid-template-columns:1fr 1fr}}
+form{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:20px;display:grid;gap:12px}
+label{font-weight:600;font-size:15px}
+input,select{width:100%;margin-top:4px;padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:500 16px var(--f)}
+dl{margin:0}dt{color:var(--mute);font-size:15px}dd{margin:0 0 14px;font-weight:700;font-size:19px}
+dd a{text-decoration:none;border-bottom:2px solid var(--rose)}
+.legal{font-size:13px;color:var(--mute);margin-top:28px;max-width:70ch}
+footer{padding:22px 0 100px;color:var(--mute);font-size:14px;border-top:1px solid var(--line)}
+.fix{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));text-align:center;z-index:11;box-shadow:0 8px 24px rgba(154,58,93,.35)}
+@media (min-width:820px){.fix{display:none}footer{padding-bottom:30px}}
+</style>
+</head>
+<body>
+<header><div class="w bar">
+  <a class="logo" href="#top" id="logo"></a>
+  <nav><a href="#services">Услуги</a><a href="#how">Как проходит приём</a><a href="#about">О специалисте</a><a href="#faq">Вопросы</a><a href="#contacts">Контакты</a></nav>
+  <a class="btn" href="#book">Записаться</a>
+</div></header>
+
+<div class="w">
+  <div class="hero" id="top">
+    <div>
+      <h1 id="h1"></h1>
+      <p id="lead"></p>
+      <div class="cta"><a class="btn" href="#book">Записаться на консультацию</a><a class="btn o" href="#services">Услуги и цены</a></div>
+    </div>
+    <svg class="art" viewBox="0 0 320 320" role="img" aria-label="Иллюстрация: капля и листья">
+      <defs><linearGradient id="d" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9708f"/><stop offset="1" stop-color="#b84a73"/></linearGradient></defs>
+      <circle cx="160" cy="160" r="150" fill="#f9e9ef"/>
+      <circle cx="160" cy="160" r="104" fill="#f3cfdc"/>
+      <path d="M160 70C160 70 100 140 100 185a60 60 0 0 0 120 0C220 140 160 70 160 70Z" fill="url(#d)"/>
+      <path d="M138 180a24 24 0 0 0 20 28" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".7"/>
+      <path d="M232 238c26-6 42-26 46-52-26 6-42 26-46 52Z" fill="#8bbf9f"/>
+      <path d="M92 244c-24-4-40-22-44-46 24 4 40 22 44 46Z" fill="#a9d1b8"/>
+    </svg>
+  </div>
+  <ul class="facts" id="facts"></ul>
+</div>
+
+<section id="services"><div class="w">
+  <h2>Услуги и цены</h2>
+  <p class="sub">Подберём программу под ваш тип кожи и задачи. Точную стоимость назовём на консультации.</p>
+  <div class="groups" id="groups"></div>
+</div></section>
+
+<section class="tint" id="how"><div class="w">
+  <h2>Как проходит приём</h2>
+  <p class="sub">Четыре спокойных шага, без спешки и навязывания.</p>
+  <ol class="steps">
+    <li><b>Консультация</b><span>Обсудим состояние кожи, ваши пожелания и противопоказания.</span></li>
+    <li><b>Подбор программы</b><span>Предложим процедуры и объясним, чего ждать от каждой.</span></li>
+    <li><b>Процедура</b><span>Работаем в чистом кабинете, с одноразовыми материалами.</span></li>
+    <li><b>Домашний уход</b><span>Дадим рекомендации, как закрепить результат.</span></li>
+  </ol>
+</div></section>
+
+<section id="about"><div class="w about">
+  <div class="ph" id="ph" aria-hidden="true"></div>
+  <div><h2 id="aname"></h2><p class="sub" id="arole" style="margin-bottom:12px"></p><p id="atext" style="margin:0;color:var(--mute)"></p></div>
+</div></section>
+
+<section class="tint" id="faq"><div class="w">
+  <h2>Частые вопросы</h2>
+  <div id="faqList" style="margin-top:18px"></div>
+</div></section>
+
+<section id="book"><div class="w book">
+  <div>
+    <h2>Запишитесь на консультацию</h2>
+    <p class="sub">Оставьте имя и телефон. Откроется Telegram с готовым сообщением, останется нажать «Отправить».</p>
+    <dl id="contacts">
+      <dt>Адрес</dt><dd id="addr"></dd>
+      <dt>Часы работы</dt><dd id="hours"></dd>
+      <dt>Телефон</dt><dd><a id="phone" href="#"></a></dd>
+    </dl>
+  </div>
+  <form id="form">
+    <label>Имя<input id="fn" required autocomplete="given-name" placeholder="Как к вам обращаться"></label>
+    <label>Телефон<input id="fp" type="tel" required autocomplete="tel" placeholder="+7"></label>
+    <label>Услуга<select id="fs"><option>Консультация</option></select></label>
+    <button class="btn" type="submit">Записаться через Telegram</button>
+  </form>
+</div>
+<div class="w"><p class="legal">Имеются противопоказания, необходима консультация специалиста. Информация на сайте не является публичной офертой, результат процедур индивидуален.</p></div>
+</section>
+
+<footer><div class="w" id="foot"></div></footer>
+<a class="btn fix" href="#book">Записаться на консультацию</a>
+
+<script>
+/* ===== Измени данные под своего клиента ===== */
+const SITE = {
+  name: "Чистая кожа",
+  title: "Забота о вашей коже без лишнего",
+  lead: "Студия косметологии: чистки, пилинги и уходовые программы. Первая консультация бесплатна.",
+  phone: "+7 900 000-00-00",
+  telegram: "your_studio",
+  address: "Москва, ул. Примерная, 1, кабинет 5",
+  hours: "Пн-Сб, 10:00-20:00",
+  facts: [["Бесплатная консультация", "Подберём процедуры под вашу кожу"], ["Одноразовые материалы", "Работаем в чистом кабинете"], ["Запись в удобное время", "Принимаем и по вечерам"]],
+  specialist: {name: "Анна Петрова", role: "Косметолог", text: "Здесь будет рассказ о специалисте: образование, опыт, подход к работе. Замените этот текст на настоящий."},
+  groups: [
+    {t: "Чистка и уход", items: [{n: "Ультразвуковая чистка", d: "60 мин", p: "от 3 000 ₽"}, {n: "Комбинированная чистка", d: "90 мин", p: "от 4 500 ₽"}, {n: "Массаж лица", d: "45 мин", p: "от 2 500 ₽"}]},
+    {t: "Пилинги", items: [{n: "Поверхностный пилинг", d: "45 мин", p: "от 3 500 ₽"}, {n: "Миндальный пилинг", d: "60 мин", p: "от 4 000 ₽"}, {n: "Уход после пилинга", d: "30 мин", p: "от 1 500 ₽"}]},
+    {t: "Омоложение", items: [{n: "Мезотерапия", d: "60 мин", p: "от 5 000 ₽"}, {n: "Биоревитализация", d: "60 мин", p: "от 9 000 ₽"}, {n: "RF-лифтинг", d: "60 мин", p: "от 6 000 ₽"}]}
+  ],
+  faq: [
+    ["Больно ли делать процедуры?", "Ощущения зависят от процедуры и чувствительности кожи. Перед началом объясним, что вы будете чувствовать, и подберём комфортный вариант."],
+    ["Нужна ли подготовка?", "Для большинства процедур достаточно прийти с чистой кожей. Если нужна специальная подготовка, скажем об этом при записи."],
+    ["Когда будет виден результат?", "Это зависит от процедуры и состояния кожи. Ориентиры по срокам и количеству сеансов назовём на консультации."],
+    ["Есть ли противопоказания?", "Да, они есть у любой процедуры. Мы обсудим их на консультации до начала работы."]
+  ]
+};
+
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const tel = "tel:" + SITE.phone.replace(/[^+\d]/g, "");
+
+document.title = "Студия косметологии «" + SITE.name + "»";
+$("logo").textContent = SITE.name; $("h1").textContent = SITE.title; $("lead").textContent = SITE.lead;
+$("facts").innerHTML = SITE.facts.map(f => "<li>" + esc(f[0]) + "<span>" + esc(f[1]) + "</span></li>").join("");
+$("groups").innerHTML = SITE.groups.map(g => '<div class="g"><h3>' + esc(g.t) + "</h3>" + g.items.map(i => '<div class="row"><b>' + esc(i.n) + "</b><small>" + esc(i.d) + "</small><em>" + esc(i.p) + "</em></div>").join("") + "</div>").join("");
+$("ph").textContent = SITE.specialist.name[0];
+$("aname").textContent = SITE.specialist.name; $("arole").textContent = SITE.specialist.role; $("atext").textContent = SITE.specialist.text;
+$("faqList").innerHTML = SITE.faq.map(q => "<details><summary>" + esc(q[0]) + "</summary><p>" + esc(q[1]) + "</p></details>").join("");
+$("addr").textContent = SITE.address; $("hours").textContent = SITE.hours;
+$("phone").textContent = SITE.phone; $("phone").href = tel;
+$("foot").textContent = "© " + new Date().getFullYear() + " Студия косметологии «" + SITE.name + "»";
+
+const sel = $("fs");
+sel.innerHTML = "<option>Консультация</option>" + SITE.groups.flatMap(g => g.items).map(i => "<option>" + esc(i.n) + "</option>").join("");
+
+$("form").addEventListener("submit", e => {
+  e.preventDefault();
+  const text = "Здравствуйте! Хочу записаться.\nИмя: " + $("fn").value.trim() + "\nТелефон: " + $("fp").value.trim() + "\nУслуга: " + sel.value;
+  window.open("https://t.me/" + SITE.telegram + "?text=" + encodeURIComponent(text), "_blank", "noopener");
+});
+</script>
+</body>
+</html>

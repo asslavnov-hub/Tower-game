@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Веломастерская «Цепь» — ремонт велосипедов</title>
+<meta name="description" content="Ремонт и обслуживание велосипедов. Диагностика бесплатно, большинство работ делаем в день обращения.">
+<style>
+:root{--blue:#1f3cff;--ink:#0d1233;--sun:#ff7a1a;--paper:#eef0f6;--white:#fff;--mute:#566086;--line:#d5daea;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55}
+a{color:inherit}
+.w{max-width:960px;margin:0 auto;padding:0 18px}
+header{position:sticky;top:0;z-index:10;background:var(--white);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;height:58px}
+.logo{font-weight:900;font-size:20px;letter-spacing:-.02em;text-decoration:none}
+nav{display:none;gap:22px}
+nav a{text-decoration:none;font-weight:600;color:var(--mute)}
+nav a:hover{color:var(--blue)}
+@media (min-width:700px){nav{display:flex}}
+.btn{display:inline-block;background:var(--sun);color:var(--ink);font-weight:800;text-decoration:none;padding:12px 20px;border-radius:12px;border:0;cursor:pointer;font-size:16px}
+.btn.ghost{background:transparent;color:var(--white);box-shadow:inset 0 0 0 2px rgba(255,255,255,.6)}
+.btn:focus-visible,a:focus-visible{outline:3px solid var(--sun);outline-offset:3px}
+.hero{background:var(--blue);color:var(--white);padding:56px 0 0}
+h1{font-size:clamp(36px,8vw,72px);line-height:1.02;letter-spacing:-.03em;margin:0 0 16px;max-width:14ch}
+.hero p{font-size:clamp(17px,2.6vw,21px);max-width:44ch;margin:0 0 26px;opacity:.92}
+.cta{display:flex;flex-wrap:wrap;gap:12px;padding-bottom:44px}
+.chain{height:34px;background:var(--paper);-webkit-mask:radial-gradient(circle at 17px 0,transparent 16px,#000 17px) 0 0/34px 34px repeat-x;mask:radial-gradient(circle at 17px 0,transparent 16px,#000 17px) 0 0/34px 34px repeat-x}
+section{padding:48px 0}
+h2{font-size:clamp(26px,5vw,38px);letter-spacing:-.02em;margin:0 0 6px;line-height:1.1}
+.sub{color:var(--mute);margin:0 0 24px}
+.price{background:var(--white);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.pr{display:grid;grid-template-columns:1fr auto;gap:2px 16px;padding:16px 18px;border-bottom:1px solid var(--line);align-items:baseline}
+.pr:last-child{border-bottom:0}
+.pr b{font-size:17px}.pr span{color:var(--mute);font-size:14px}
+.pr em{font-style:normal;font-weight:900;font-size:18px;color:var(--blue);grid-row:1/3;grid-column:2;align-self:center}
+.steps{display:grid;gap:14px;padding:0;margin:0;list-style:none;counter-reset:s}
+@media (min-width:700px){.steps{grid-template-columns:repeat(3,1fr)}}
+.steps li{counter-increment:s;background:var(--white);border:1px solid var(--line);border-radius:16px;padding:20px}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--blue);color:var(--white);font-weight:900;margin-bottom:10px}
+.steps b{display:block;font-size:18px;margin-bottom:4px}
+.steps span{color:var(--mute)}
+.contacts{background:var(--ink);color:var(--white)}
+.contacts .sub{color:#aab3d8}
+.cg{display:grid;gap:18px}
+@media (min-width:700px){.cg{grid-template-columns:1fr 1fr}}
+.cg dt{color:#aab3d8;font-size:14px}.cg dd{margin:0 0 14px;font-size:20px;font-weight:700}
+.cg a{text-decoration:none;border-bottom:2px solid var(--sun)}
+footer{padding:20px 0 90px;color:var(--mute);font-size:14px}
+.call{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));text-align:center;box-shadow:0 8px 24px rgba(13,18,51,.3);z-index:11}
+@media (min-width:700px){.call{display:none}footer{padding-bottom:30px}}
+</style>
+</head>
+<body>
+<header><div class="w bar">
+  <a class="logo" href="#top" id="logo"></a>
+  <nav><a href="#prices">Цены</a><a href="#how">Как работаем</a><a href="#contacts">Контакты</a></nav>
+  <a class="btn" id="callTop" href="#">Позвонить</a>
+</div></header>
+
+<div class="hero" id="top"><div class="w">
+  <h1 id="h1"></h1>
+  <p id="lead"></p>
+  <div class="cta"><a class="btn" id="callHero" href="#">Позвонить</a><a class="btn ghost" href="#prices">Смотреть цены</a></div>
+</div><div class="chain" aria-hidden="true"></div></div>
+
+<section id="prices"><div class="w">
+  <h2>Цены на работы</h2>
+  <p class="sub">Диагностика бесплатная. Точную стоимость назовём после осмотра.</p>
+  <div class="price" id="list"></div>
+</div></section>
+
+<section id="how" style="padding-top:0"><div class="w">
+  <h2>Как это работает</h2>
+  <p class="sub">Три шага от поломки до поездки.</p>
+  <ol class="steps">
+    <li><b>Приезжайте или звоните</b><span>Покажите велосипед и расскажите, что беспокоит.</span></li>
+    <li><b>Осмотр и цена</b><span>Проверим бесплатно и назовём стоимость до начала работ.</span></li>
+    <li><b>Забираете готовым</b><span>Большинство работ делаем в день обращения.</span></li>
+  </ol>
+</div></section>
+
+<section class="contacts" id="contacts"><div class="w">
+  <h2>Контакты</h2>
+  <p class="sub">Приезжайте без записи или позвоните заранее.</p>
+  <dl class="cg">
+    <div><dt>Адрес</dt><dd><a id="addr" href="#" target="_blank" rel="noopener"></a></dd>
+         <dt>Часы работы</dt><dd id="hours"></dd></div>
+    <div><dt>Телефон</dt><dd><a id="phone" href="#"></a></dd>
+         <dt>Telegram</dt><dd><a id="tg" href="#" target="_blank" rel="noopener"></a></dd></div>
+  </dl>
+</div></section>
+
+<footer><div class="w" id="foot"></div></footer>
+<a class="btn call" id="callBar" href="#">Позвонить в мастерскую</a>
+
+<script>
+/* ===== Измени данные под своего клиента ===== */
+const SITE = {
+  name: "Цепь",
+  type: "Веломастерская",
+  title: "Чиним велосипеды за день",
+  lead: "Ремонт и обслуживание городских, горных и электровелосипедов. Диагностика бесплатно.",
+  phone: "+7 900 000-00-00",
+  telegram: "your_shop",
+  address: "Москва, ул. Примерная, 1",
+  hours: "Ежедневно, 10:00-20:00",
+  services: [
+    {n: "Заклейка камеры", t: "20 минут", p: "от 300 ₽"},
+    {n: "Регулировка тормозов", t: "30 минут", p: "от 400 ₽"},
+    {n: "Настройка переключателей", t: "40 минут", p: "от 500 ₽"},
+    {n: "Замена цепи", t: "30 минут", p: "от 600 ₽"},
+    {n: "Комплексное ТО", t: "1 день", p: "от 2 500 ₽"}
+  ]
+};
+
+const $ = id => document.getElementById(id);
+const tel = "tel:" + SITE.phone.replace(/[^+\d]/g, "");
+document.title = SITE.type + " «" + SITE.name + "»";
+$("logo").textContent = SITE.name;
+$("h1").textContent = SITE.title;
+$("lead").textContent = SITE.lead;
+["callTop", "callHero", "callBar"].forEach(id => $(id).href = tel);
+$("phone").href = tel; $("phone").textContent = SITE.phone;
+$("tg").href = "https://t.me/" + SITE.telegram; $("tg").textContent = "@" + SITE.telegram;
+$("addr").textContent = SITE.address;
+$("addr").href = "https://yandex.ru/maps/?text=" + encodeURIComponent(SITE.address);
+$("hours").textContent = SITE.hours;
+$("foot").textContent = "© " + new Date().getFullYear() + " " + SITE.type + " «" + SITE.name + "»";
+$("list").innerHTML = SITE.services.map(s => '<div class="pr"><b>' + s.n + '</b><span>' + s.t + '</span><em>' + s.p + '</em></div>').join("");
+</script>
+</body>
+</html>
