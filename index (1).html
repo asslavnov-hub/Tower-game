@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Мои проекты — вайбкодинг</title>
+<meta name="description" content="Игры, сайты и Telegram-приложения, сделанные вместе с ИИ.">
+<style>
+:root{--bg:#f5f6fa;--card:#ffffff;--text:#161a2b;--mute:#5d6483;--line:#dfe2ee;--acc:#3b4cca;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1220;--card:#181c30;--text:#eceefb;--mute:#9aa1c4;--line:#2a3050;--acc:#8c9bff;color-scheme:dark}}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55}
+main{max-width:960px;margin:0 auto;padding:36px 18px 48px}
+h1{font-size:clamp(32px,7vw,52px);line-height:1.05;letter-spacing:-.03em;margin:0 0 10px}
+.lead{color:var(--mute);margin:0 0 32px;max-width:52ch;font-size:18px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+a.c{display:block;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;text-decoration:none;color:inherit;border-top:5px solid var(--k);transition:transform .15s}
+a.c:hover{transform:translateY(-3px)}
+a.c:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+.t{font-size:13px;font-weight:700;color:var(--k);margin-bottom:6px}
+a.c h2{font-size:21px;margin:0 0 6px;letter-spacing:-.01em}
+a.c p{margin:0;color:var(--mute);font-size:15px}
+footer{margin-top:36px;color:var(--mute);font-size:14px}
+@media (prefers-reduced-motion:reduce){a.c{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Мои проекты</h1>
+  <p class="lead">Игры, сайты и приложения для Telegram. Всё сделано вместе с ИИ, без ручного кода.</p>
+  <div class="grid">
+    <a class="c" style="--k:#e4572e" href="tower.html"><div class="t">Игра</div><h2>Башня</h2><p>Ставь блоки точно и строй башню выше.</p></a>
+    <a class="c" style="--k:#2f9e6e" href="words.html"><div class="t">Telegram-игра</div><h2>Слово дня</h2><p>Угадай слово из пяти букв за шесть попыток.</p></a>
+    <a class="c" style="--k:#8a5a2b" href="coffee.html"><div class="t">Telegram-игра</div><h2>Кофейня</h2><p>Вари кофе, улучшай заведение и расти доход.</p></a>
+    <a class="c" style="--k:#0f766e" href="credit.html"><div class="t">Сайт-калькулятор</div><h2>Кредитный калькулятор</h2><p>Платёж, переплата и график платежей.</p></a>
+    <a class="c" style="--k:#3b4cca" href="expenses.html"><div class="t">Telegram-приложение</div><h2>Мои траты</h2><p>Учёт расходов по категориям и месяцам.</p></a>
+    <a class="c" style="--k:#1f3cff" href="velo.html"><div class="t">Сайт-визитка</div><h2>Веломастерская «Цепь»</h2><p>Шаблон сайта для малого бизнеса.</p></a>
+    <a class="c" style="--k:#b8903f" href="shaurma.html"><div class="t">Дизайн сайта</div><h2>Maison Shawarma</h2><p>Люксовый сайт для обычной шаурмечной.</p></a>
+    <a class="c" style="--k:#b84a73" href="cosmo.html"><div class="t">Сайт-визитка</div><h2>Студия косметологии</h2><p>Услуги, цены и запись через Telegram.</p></a>
+  </div>
+  <footer>Сделано с помощью ИИ.</footer>
+</main>
+</body>
+</html>
